@@ -1,0 +1,20 @@
+<!-- web components explicit API's using class methods -->
+<my-custom></my-custom>
+<script>
+    class MyWebComponent extends HTMLElement {
+        constructor(){
+            super();
+            this.innerHTML = `<h1>Hello world!</h1>`;
+            this.header = this.querySelector('h1');
+        }
+
+        changeTextColor(color){
+            this.header.style.color = color;
+        }
+        changeText(text){
+            this.header.innerHTML = text;
+        }
+    }
+
+    customElements.define('my-custom', MyWebComponent);
+</script>

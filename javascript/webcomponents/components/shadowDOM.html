@@ -1,0 +1,57 @@
+<!-- Allow external styling of a web component's Shadow DOM -->
+<style>
+    /* defining var color global for component */
+    custom-element{
+        --text-color: purple;
+    }
+    .text {
+        color: red !important;
+        text-decoration: underline;
+        font-size: 36px;
+    }
+</style>
+<template>
+    <style>
+        /* asign of var to color attribute, can tell if var color not exists 
+        asign a default color (blue) */
+        .text{
+            color: var(--text-color, blue);
+            text-decoration: underline;
+            font-size: 26px;
+        }
+    </style>
+    <div class="text">
+        <slot name="content">Default text</slot>
+    </div>
+</template>
+<script>
+    const template = document.querySelector('template');
+    class CustomElement extends HTMLElement{
+        constructor(){
+            super();
+            this.attachShadow({mode: "open"});
+            this.shadowRoot.appendChild(template.content.cloneNode(true));
+        }
+        // method that iterate object styles and asign each attribute into textElement
+        changeStyles(styles){
+            const textElement = this.shadowRoot.querySelector('.text');
+            Object.keys(styles).forEach(styleKey => {
+                textElement.style[styleKey] = styles[styleKey];
+            })
+        }
+        //we tell to our method what attribute will observe
+        static get observedAttributes(){
+            return ['color', 'text-decoration'];
+        }
+        //we take the attribute, oldValue and newValue then call changeStyles method
+        //en pocas palabras es pareciera reactividad con el estilo
+        attributeChangedCallback(attribute, oldValue, newValue){
+            this.changeStyles({[attribute]: newValue});
+        }
+    }
+    window.customElements.define('custom-element', CustomElement);
+</script>
+<custom-element>
+    <p slot="content">In the shadow</p>
+</custom-element>
+<div class="text">Outside the shadow</div>

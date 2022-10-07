@@ -1,0 +1,38 @@
+<!-- dynamic component with slots -->
+<template>
+    <!-- dynamic template -->
+</template>
+<script>
+    //template
+    const templateString = `
+    <div>
+        <slot name="slot1"></slot>
+    </div>
+    <form>
+        <input placeholder="Input" />
+    </form>
+    <slot name="slot2"></slot>
+    `;
+    //create html element template and asign template string
+    const template = document.createElement('template');
+    template.innerHTML = templateString;
+    //class custom element
+    class CustomElement extends HTMLElement {
+        constructor(){
+            super();
+            this.attachShadow({mode: "open"});
+            this.shadowRoot
+                .appendChild(template.content.cloneNode(true));
+        }
+    }
+    customElements.define('custom-element', CustomElement);
+</script>
+<!-- instance of component with slots -->
+<custom-element>
+    <p slot="slot1">Slot 1 text</p>
+    <p slot="slot2">Slot 2 text</p>
+</custom-element>
+<custom-element>
+    <p slot="slot1">Slot 1 text second component</p>
+    <p slot="slot2">Slot 2 text second component</p>
+</custom-element>
